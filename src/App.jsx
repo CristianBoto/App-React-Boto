@@ -34,31 +34,19 @@ const WINNER_COMBOS = [
   [0, 4, 8], [2, 4, 6]             // Diagonal
 ];
 
-function createConfetti() {
+function createConfetti(isWin) {
   const confettiContainer = document.querySelector('.confetti-container');
   const confettiCount = 50; // Número de piezas de confeti
+
+  const confettiImage = isWin ? 'conffeti.png' : 'empate.png';
 
   for (let i = 0; i < confettiCount; i++) {
     const confettiPiece = document.createElement('div');
     confettiPiece.classList.add('confetti');
-    confettiPiece.style.backgroundImage = 'url(src/imagenes/conffeti.png)';
+    confettiPiece.style.backgroundImage = `url(src/assets/${confettiImage})`;
     confettiPiece.style.left = `${Math.random() * 100}%`; // Posición horizontal aleatoria
     confettiPiece.style.animationDelay = `${Math.random() * 3}s`; // Retraso de animación aleatorio
     confettiContainer.appendChild(confettiPiece);
-  }
-}
-
-function createTieConfetti() {
-  const tieconfettiContainer = document.querySelector('.tieconfetti-container');
-  const tieconfettiCount = 50; // Número de piezas de confeti
-
-  for (let i = 0; i < tieconfettiCount; i++) {
-    const tieconfettiPiece = document.createElement('div');
-    tieconfettiPiece.classList.add('tieconfetti');
-    tieconfettiPiece.style.backgroundImage = 'url(src/imagenes/empate.png)';
-    tieconfettiPiece.style.left = `${Math.random() * 100}%`; // Posición horizontal aleatoria
-    tieconfettiPiece.style.animationDelay = `${Math.random() * 3}s`; // Retraso de animación aleatorio
-    tieconfettiContainer.appendChild(tieconfettiPiece);
   }
 }
 
@@ -87,14 +75,13 @@ function App() {
       const newAudio = new Audio(winner === 'Empate' ? losingSound : winningSound);
       newAudio.play();
       setAudio(newAudio);
+      createConfetti(winner !== 'Empate');
     }
   }, [winner]);
 
   const resetGame = () => {
     const confettiContainer = document.querySelector('.confetti-container');
     confettiContainer.innerHTML = '';
-    const tieconfettiContainer = document.querySelector('.tieconfetti-container');
-    tieconfettiContainer.innerHTML = '';
     if (audio) {
       audio.pause();
     }
@@ -117,10 +104,8 @@ function App() {
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
       setWinner(newWinner);
-      createConfetti();
     } else if (!newBoard.includes(null)) {
       setWinner('Empate');
-      createTieConfetti();
     }
   };
 
@@ -181,7 +166,6 @@ function App() {
       )}
   
       <div className="confetti-container"></div>
-      <div className="tieconfetti-container"></div>
     </main>
   );
 }
