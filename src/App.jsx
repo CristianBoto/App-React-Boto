@@ -1,14 +1,10 @@
-// Importamos React y los hooks necesarios
 import React, { useState, useEffect } from 'react';
-// Importamos el sonido de victoria
 import winningSound from './musica/champions-queen_1635134178.mp3';
-// Importamos el sonido de derrota
 import losingSound from './musica/mario-kart-perdiste-perder-loser.mp3';
-// Importamos los iconos de FontAwesome
 import { FaTimes, FaRegCircle, FaRegHandshake } from "react-icons/fa";
 import Player from './Player';
+import Ranking from './Ranking';
 
-// Definimos los turnos y la función para renderizar un cuadrado
 const TURNS = {
   X: 'x',
   O: 'o'
@@ -36,7 +32,7 @@ const WINNER_COMBOS = [
 
 function createConfetti(isWin) {
   const confettiContainer = document.querySelector('.confetti-container');
-  const confettiCount = 50; // Número de piezas de confeti
+  const confettiCount = 50;
 
   const confettiImage = isWin ? 'conffeti.png' : 'empate.png';
 
@@ -44,17 +40,19 @@ function createConfetti(isWin) {
     const confettiPiece = document.createElement('div');
     confettiPiece.classList.add('confetti');
     confettiPiece.style.backgroundImage = `url(src/assets/${confettiImage})`;
-    confettiPiece.style.left = `${Math.random() * 100}%`; // Posición horizontal aleatoria
-    confettiPiece.style.animationDelay = `${Math.random() * 3}s`; // Retraso de animación aleatorio
+    confettiPiece.style.left = `${Math.random() * 100}%`;
+    confettiPiece.style.animationDelay = `${Math.random() * 3}s`;
     confettiContainer.appendChild(confettiPiece);
   }
 }
 
 function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [turn, setTurn] = useState(null); // Inicialmente no hay turno seleccionado
+  const [turn, setTurn] = useState(null);
   const [winner, setWinner] = useState(null);
   const [audio, setAudio] = useState(null);
+  const [showRanking, setShowRanking] = useState(false);
+  const [ranking, setRanking] = useState({ X: 0, O: 0, empates: 0 });
 
   const checkWinner = (boardToCheck) => {
     for (const combo of WINNER_COMBOS) {
@@ -76,6 +74,18 @@ function App() {
       newAudio.play();
       setAudio(newAudio);
       createConfetti(winner !== 'Empate');
+      if (winner !== 'Empate') {
+        const winnerKey = winner === TURNS.X ? 'X' : 'O';
+        setRanking(prevRanking => ({
+          ...prevRanking,
+          [winnerKey]: prevRanking[winnerKey] + 1
+        }));
+      } else {
+        setRanking(prevRanking => ({
+          ...prevRanking,
+          empates: prevRanking.empates + 1
+        }));
+      }
     }
   }, [winner]);
 
@@ -85,17 +95,22 @@ function App() {
     if (audio) {
       audio.pause();
     }
-  
+
     setBoard(Array(9).fill(null));
-    setTurn(null); // Reiniciar el turno seleccionado
+    setTurn(null);
     setWinner(null);
+    
+  };
+
+  const resetRanking = () => {
+    setRanking({ X: 0, O: 0, empates: 0 });
   };
 
   const updateBoard = (index) => {
     if (board[index] || winner) return;
 
     const newBoard = [...board];
-    newBoard[index] = turn || TURNS.X; // Si no se ha seleccionado un turno, usar X como predeterminado
+    newBoard[index] = turn || TURNS.X;
     setBoard(newBoard);
 
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X;
@@ -109,7 +124,19 @@ function App() {
     }
   };
 
-  // Agregar condición para evitar que se inicie el juego si no se ha seleccionado un turno
+  const handleRankingClick = () => {
+    setShowRanking(true);
+  };
+
+  if (showRanking) {
+    return (
+      <main className='board'>
+        <h1>Tres en Línea</h1>
+        <Ranking ranking={ranking} onRestart={resetGame} onResetRanking={resetRanking} onHideRanking={() => setShowRanking(false)} />
+      </main>
+    );
+  }
+
   if (turn === null) {
     return (
       <main className='board'>
@@ -117,7 +144,7 @@ function App() {
         <div className="start-choice">
           <p>¿Quién empieza?</p>
           <button onClick={() => setTurn(TURNS.X)}><Player symbol="X" /></button>
-        <button onClick={() => setTurn(TURNS.O)}><Player symbol="O" /></button>
+          <button onClick={() => setTurn(TURNS.O)}><Player symbol="O" /></button>
         </div>
       </main>
     );
@@ -126,7 +153,7 @@ function App() {
   return (
     <main className='board'>
       <h1>Tres en Línea</h1>
-  
+
       <section className="game">
         {board.map((value, index) => (
           <Square key={index} index={index} updateBoard={updateBoard}>
@@ -134,7 +161,7 @@ function App() {
           </Square>
         ))}
       </section>
-  
+
       <section className="turn">
         {turn && (
           <Square isSelected={turn === TURNS.X}><FaTimes /></Square>
@@ -143,7 +170,7 @@ function App() {
           <Square isSelected={turn === TURNS.O}><FaRegCircle /></Square>
         )}
       </section>
-  
+
       {winner !== null && (
         <section className='winner'>
           <div className='text'>
@@ -160,11 +187,12 @@ function App() {
             </header>
             <footer>
               <button onClick={resetGame}>Empezar de nuevo</button>
+              <button onClick={handleRankingClick}>Ranking</button>
             </footer>
           </div>
         </section>
       )}
-  
+
       <div className="confetti-container"></div>
     </main>
   );
