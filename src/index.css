@@ -160,7 +160,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 0px; /* CAMBIE*/
   
 }
 
@@ -224,6 +224,111 @@ body {
   animation: confetti-fall 5s ease infinite;
   background-image: url('src/empate.png');
   background-size: contain;
+}
+
+.start-choice {
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(50vh + 20px);
+}
+
+.start-choice p {
+  color: #eee;
+  margin-bottom: 20px;
+  font-size: 36px;
+}
+
+.start-choice button {
+  padding: 12px 20px;
+  margin: 10px 0;
+  background: transparent;
+  border: 2px solid #eee;
+  color: #eee;
+  width: 100px;
+  border-radius: 5px;
+  transition: 0.2s;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+/* En el archivo Index.css */
+
+.board {
+  width: fit-content;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.board h1 {
+  color: #eee;
+  margin-bottom: 16px;
+  font-size: 32px; /* Reducir el tamaño del título "Tres en Línea" */
+}
+
+.ranking-container {
+  text-align: center;
+  margin-top: 40px; /* Aumentar el espacio superior */
+  margin-bottom: 20px; /* Agregar espacio inferior */
+}
+/* En el archivo Index.css */
+
+.ranking h2 {
+  color: #eee;
+  margin-bottom: 20px;
+  font-size: 28px; /* Aumentar el tamaño de la palabra "Ranking" */
+}
+
+.ranking p {
+  margin-bottom: 10px;
+}
+
+.ranking .score {
+  margin-left: 10px;
+  font-size: 20px; /* Ajustar el tamaño de los números */
+}
+
+/* Ajustar el tamaño de los símbolos de ranking */
+.ranking svg {
+  font-size: 20px; /* Aumentar el tamaño de los símbolos */
+}
+
+
+.game {
+  margin-bottom: 20px; /* Agregar espacio inferior */
+}
+
+.square {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 45px;
+  line-height: 105px;
+}
+
+.turn {
+  margin: 15px auto; /* Centrar los símbolos de turno */
+  width: fit-content;
+  position: relative;
+  border-radius: 10px;
+}
+
+.winner .square {
+  width: 70px;
+  height: 70px;
+  pointer-events: none;
+  border-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  line-height: 1em;
 }
 
 .start-choice {

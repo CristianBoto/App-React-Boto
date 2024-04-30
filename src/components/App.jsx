@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import winningSound from './musica/champions-queen_1635134178.mp3';
-import losingSound from './musica/mario-kart-perdiste-perder-loser.mp3';
+import winningSound from '../assets/Music/champions-queen_1635134178.mp3';
+import losingSound from '../assets/Music/mario-kart-perdiste-perder-loser.mp3';
+
 import { FaTimes, FaRegCircle, FaRegHandshake } from "react-icons/fa";
 import Player from './Player';
 import Ranking from './Ranking';
@@ -39,7 +40,7 @@ function createConfetti(isWin) {
   for (let i = 0; i < confettiCount; i++) {
     const confettiPiece = document.createElement('div');
     confettiPiece.classList.add('confetti');
-    confettiPiece.style.backgroundImage = `url(src/assets/${confettiImage})`;
+    confettiPiece.style.backgroundImage = `url(src/assets/Images/${confettiImage})`;
     confettiPiece.style.left = `${Math.random() * 100}%`;
     confettiPiece.style.animationDelay = `${Math.random() * 3}s`;
     confettiContainer.appendChild(confettiPiece);
@@ -172,6 +173,7 @@ function App() {
       </section>
 
       {winner !== null && (
+        // En la sección del componente App donde se muestra el mensaje de victoria o empate
         <section className='winner'>
           <div className='text'>
             <h2>{winner === 'Empate' ? 'EMPATE!' : 'Ganó:'}</h2>
@@ -187,6 +189,9 @@ function App() {
             </header>
             <footer>
               <button onClick={resetGame}>Empezar de nuevo</button>
+            </footer>
+            <footer> </footer>
+            <footer>
               <button onClick={handleRankingClick}>Ranking</button>
             </footer>
           </div>
